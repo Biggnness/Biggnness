@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecipeExtractor - Save Recipes from Any URL</title>
+    <meta name="description" content="Extract and save recipes from Instagram, Pinterest, TikTok, YouTube and more">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-utensils"></i>
+                <span>RecipeExtractor</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#my-recipes" class="nav-link">My Recipes</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-secondary" id="loginBtn">Login</button>
+                <button class="btn-primary" id="signupBtn">Sign Up</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1>Extract Recipes from Any URL</h1>
+                    <p>Save recipes from Instagram, Pinterest, TikTok, YouTube and more. Get clean, organized recipes in seconds.</p>
+                    
+                    <!-- URL Input -->
+                    <div class="url-input-container">
+                        <div class="input-wrapper">
+                            <i class="fas fa-link"></i>
+                            <input type="url" id="recipeUrl" placeholder="Paste recipe URL here (Instagram, Pinterest, TikTok, YouTube...)" />
+                            <button id="extractBtn" class="extract-btn">
+                                <i class="fas fa-magic"></i>
+                                Extract Recipe
+                            </button>
+                        </div>
+                        <div class="supported-platforms">
+                            <span>Supported platforms:</span>
+                            <div class="platform-icons">
+                                <i class="fab fa-instagram" title="Instagram"></i>
+                                <i class="fab fa-pinterest" title="Pinterest"></i>
+                                <i class="fab fa-tiktok" title="TikTok"></i>
+                                <i class="fab fa-youtube" title="YouTube"></i>
+                                <i class="fab fa-facebook" title="Facebook"></i>
+                                <i class="fas fa-globe" title="Other websites"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="recipe-preview-card">
+                        <div class="recipe-image-placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="recipe-content-preview">
+                            <h3>Recipe Title</h3>
+                            <div class="recipe-meta">
+                                <span><i class="fas fa-clock"></i> 30 mins</span>
+                                <span><i class="fas fa-users"></i> 4 servings</span>
+                            </div>
+                            <div class="ingredients-preview">
+                                <h4>Ingredients</h4>
+                                <ul>
+                                    <li>• 2 cups flour</li>
+                                    <li>• 1 cup sugar</li>
+                                    <li>• 3 eggs</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <h3>Extracting Recipe...</h3>
+                <p>Analyzing the content and extracting recipe details</p>
+            </div>
+        </div>
+
+        <!-- Recipe Display Modal -->
+        <div id="recipeModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Extracted Recipe</h2>
+                    <button class="close-btn" id="closeModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="recipeDisplay">
+                        <!-- Recipe content will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" id="editRecipeBtn">
+                        <i class="fas fa-edit"></i> Edit Recipe
+                    </button>
+                    <button class="btn-primary" id="saveRecipeBtn">
+                        <i class="fas fa-save"></i> Save Recipe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Recipes Section -->
+        <section id="my-recipes" class="my-recipes hidden">
+            <div class="container">
+                <div class="section-header">
+                    <h2>My Cookbooks</h2>
+                    <div class="recipes-count">
+                        <span id="recipesUsed">0</span>/8 used
+                    </div>
+                </div>
+                
+                <!-- Search and Filter -->
+                <div class="recipes-controls">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchRecipes" placeholder="Search recipes...">
+                    </div>
+                    <div class="filter-options">
+                        <select id="filterTime">
+                            <option value="">All cook times</option>
+                            <option value="quick">Under 30 mins</option>
+                            <option value="medium">30-60 mins</option>
+                            <option value="long">Over 60 mins</option>
+                        </select>
+                        <select id="filterServings">
+                            <option value="">All servings</option>
+                            <option value="1-2">1-2 servings</option>
+                            <option value="3-4">3-4 servings</option>
+                            <option value="5+">5+ servings</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Recipes Grid -->
+                <div class="recipes-grid">
+                    <div class="new-cookbook-card">
+                        <div class="add-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <p>New cookbook</p>
+                    </div>
+                    <div id="recipesContainer">
+                        <!-- Saved recipes will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <h2>Why Choose RecipeExtractor?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <h3>Universal URL Support</h3>
+                        <p>Extract recipes from Instagram, Pinterest, TikTok, YouTube, and thousands of recipe websites</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>AI-Powered Extraction</h3>
+                        <p>Advanced AI automatically identifies and extracts ingredients, instructions, and cooking details</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <h3>Easy Editing</h3>
+                        <p>Customize recipes to your preferences. Adjust servings, modify ingredients, and add personal notes</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>Mobile Friendly</h3>
+                        <p>Access your recipes anywhere. Fully responsive design works perfectly on all devices</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <h3>Share & Export</h3>
+                        <p>Share recipes with friends or export to PDF, print, or save to your favorite note-taking app</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Smart Search</h3>
+                        <p>Quickly find recipes by ingredients, cooking time, or cuisine type with intelligent search</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-utensils"></i>
+                    <span>RecipeExtractor</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 RecipeExtractor. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
